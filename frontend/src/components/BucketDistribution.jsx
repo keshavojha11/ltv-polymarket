@@ -120,28 +120,28 @@ export default function BucketDistribution({ markets, summary }) {
           label="Bucket A"
           value={summary.bucket_a_count}
           color={BUCKET_COLORS.A}
-          sublabel="High confidence"
+          sublabel="High conviction & near-term"
           icon="🟢"
         />
         <StatCard
           label="Bucket B"
           value={summary.bucket_b_count}
           color={BUCKET_COLORS.B}
-          sublabel="Standard"
+          sublabel="Standard risk profile"
           icon="🟡"
         />
         <StatCard
           label="Liq. Risk"
           value={summary.flagged_liquidation}
           color={FLAG_COLORS.liquidation}
-          sublabel="Extreme + near expiry"
+          sublabel="High risk of settlement"
           icon="🔴"
         />
         <StatCard
           label="Mispriced"
           value={summary.flagged_mispriced}
           color={FLAG_COLORS.mispriced}
-          sublabel="Bucket mismatch"
+          sublabel="Bucket/LTV mismatch"
           icon="🟠"
         />
         <StatCard
@@ -152,13 +152,35 @@ export default function BucketDistribution({ markets, summary }) {
         />
       </div>
 
+      {/* Model Briefing */}
+      <div className="glass-card p-5 border-l-4 border-blue-500 bg-blue-500/5">
+        <h3 className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+          <span>🧠</span> Mode Intelligence Guide
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-text-secondary leading-relaxed">
+          <div>
+            <p className="font-semibold text-text-primary mb-1">The Bucket System</p>
+            <p>Markets are split into <span className="text-emerald-400 font-medium">Bucket A</span> (Price &gt; 0.65 and &lt; 30 days left) and <span className="text-amber-400 font-medium">Bucket B</span>. Bucket A reflects high-certainty, near-term positions that justify higher leverage.</p>
+          </div>
+          <div>
+            <p className="font-semibold text-text-primary mb-1">Effective LTV</p>
+            <p>Calculated by applying <span className="text-indigo-400 font-medium">Time Decay</span> (LTV drops as resolution nears) and a <span className="text-indigo-400 font-medium">Confidence Multiplier</span> (LTV is higher for extreme prices like 0.10 or 0.90).</p>
+          </div>
+          <div>
+            <p className="font-semibold text-text-primary mb-1">Risk Flags</p>
+            <p><span className="text-red-400 font-medium">Liquidation Risk</span> triggers when a market has extreme pricing AND is within 7 days of expiry. <span className="text-orange-400 font-medium">Mispriced</span> flags assets where the LTV is significantly disconnected from its bucket.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Bucket Distribution Bar */}
         <div className="glass-card p-5">
-          <h3 className="text-sm font-semibold text-text-secondary mb-4 uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-text-secondary mb-1 uppercase tracking-wider">
             Bucket Distribution
           </h3>
+          <p className="text-[10px] text-text-muted mb-4 uppercase tracking-tighter">Market Count by Risk Profile</p>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={bucketData} barCategoryGap="30%">
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(30, 41, 59, 0.5)" />
@@ -181,9 +203,10 @@ export default function BucketDistribution({ markets, summary }) {
 
         {/* Flag Breakdown Pie */}
         <div className="glass-card p-5">
-          <h3 className="text-sm font-semibold text-text-secondary mb-4 uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-text-secondary mb-1 uppercase tracking-wider">
             Flag Breakdown
           </h3>
+          <p className="text-[10px] text-text-muted mb-4 uppercase tracking-tighter">Critical safety alerts across all markets</p>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie
@@ -219,9 +242,10 @@ export default function BucketDistribution({ markets, summary }) {
 
         {/* LTV Histogram */}
         <div className="glass-card p-5">
-          <h3 className="text-sm font-semibold text-text-secondary mb-4 uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-text-secondary mb-1 uppercase tracking-wider">
             Effective LTV Distribution
           </h3>
+          <p className="text-[10px] text-text-muted mb-4 uppercase tracking-tighter">Range of final borrow capacities per $100 collateral</p>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={ltvBins} barCategoryGap="15%">
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(30, 41, 59, 0.5)" />

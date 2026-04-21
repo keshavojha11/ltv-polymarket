@@ -60,13 +60,26 @@ export default function RiskHeatmap({ markets }) {
   }));
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in space-y-6">
+      {/* Readout Header */}
+      <div className="glass-card p-5 border-l-4 border-indigo-500 bg-indigo-500/5">
+        <h3 className="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+          <span>🎯</span> Risk Analysis Heatmap
+        </h3>
+        <p className="text-sm text-text-secondary leading-relaxed">
+          This chart visualizes risk by plotting <span className="text-text-primary font-medium">Price (X-axis)</span> against <span className="text-text-primary font-medium">Days to Expiration (Y-axis)</span>. 
+          The <span className="text-text-primary font-medium">Dot Color</span> represents the final Effective LTV (Green = High capacity, Red = Low capacity). 
+          The <span className="text-text-primary font-medium">Dot Size</span> represents the 24h trading volume—larger dots indicate more liquid and reliable markets.
+          Points in the <span className="text-indigo-400 font-medium">bottom-right quadrant</span> typically represent high-conviction, near-term Bucket A assets.
+        </p>
+      </div>
+
       {/* Legend */}
       <div className="flex items-center justify-between mb-4 px-1">
         <div className="flex items-center gap-4 text-xs text-text-secondary">
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full" style={{ background: ltvToColor(0.7) }} />
-            High LTV
+            High LTV (Low Risk)
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full" style={{ background: ltvToColor(0.4) }} />
@@ -74,7 +87,7 @@ export default function RiskHeatmap({ markets }) {
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full" style={{ background: ltvToColor(0.15) }} />
-            Low LTV
+            Low LTV (High Risk)
           </span>
           <span className="text-text-muted">|</span>
           <span className="flex items-center gap-1.5">
@@ -83,7 +96,7 @@ export default function RiskHeatmap({ markets }) {
           </span>
         </div>
         <div className="text-xs text-text-muted">
-          Dot size = log(volume)
+          Dot size = trading volume
         </div>
       </div>
 

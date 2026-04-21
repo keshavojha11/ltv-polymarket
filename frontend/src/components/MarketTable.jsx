@@ -63,7 +63,20 @@ export default function MarketTable({ markets }) {
   ).length;
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in space-y-4">
+      {/* Table Guide */}
+      <div className="glass-card p-4 border-l-4 border-emerald-500 bg-emerald-500/5">
+        <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-1 flex items-center gap-2">
+          <span>📋</span> Market Risk Ledger
+        </h3>
+        <p className="text-xs text-text-secondary leading-relaxed">
+          The table below list the top 50 Prediction Markets by volume. 
+          <span className="text-text-primary ml-1 font-medium">Base LTV</span> is the starting leverage, while 
+          <span className="text-text-primary ml-1 font-medium">Eff. LTV</span> shows your final borrow capacity after risk adjustments. 
+          Rows with <span className="text-risk font-semibold">Red Left Borders</span> indicate high liquidation or settlement risk.
+        </p>
+      </div>
+
       {/* Filter bar */}
       <div className="flex items-center justify-between px-1 mb-4">
         <p className="text-sm text-text-secondary">
