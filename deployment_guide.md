@@ -28,8 +28,9 @@ Railway is ideal for the Python FastAPI backend.
 2.  **New Project**: Select "Deploy from GitHub repo".
 3.  **Configure**:
     *   Select your repository.
-    *   **Root Directory**: Set this to `backend`.
-    *   Railway will detect the `requirements.txt` and `Procfile` and deploy automatically.
+    *   **CRITICAL**: Go to **Settings** -> **General** -> **Root Directory** and set it to `backend`. 
+    *   *Without this, Railway will try to build the root folder and fail because it can't find your Python code.*
+    *   Railway will then detect the `requirements.txt` and `Procfile` inside the `backend` folder.
 4.  **Public URL**: Once deployed, go to the **Settings** tab and click **Generate Domain**.
     *   *Copy this URL (e.g., `https://polymarket-ltv-production.up.railway.app`). You will need it for the frontend.*
 
