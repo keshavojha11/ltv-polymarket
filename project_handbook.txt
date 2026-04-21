@@ -1,0 +1,161 @@
+================================================================================
+PREDICTION MARKET LTV RISK SIMULATOR: THE COMPLETE HANDBOOK
+================================================================================
+
+Welcome to the internal guide for the Revalon LTV Risk Simulator. This document
+is designed as a "working textbook" to explain what this project is, why it 
+exists, and how the underlying logic works—even if you're new to finance or 
+coding.
+
+--------------------------------------------------------------------------------
+1. THE BIG PICTURE: WHAT IS THIS?
+--------------------------------------------------------------------------------
+
+This project is a web-based dashboard that helps Revalon (a lending protocol) 
+decide how much money they can safely lend to someone who is using a 
+"Prediction Market" position as collateral.
+
+In simple terms:
+- Someone has a "bet" on Polymarket (e.g., they own tokens saying "Bitcoin will 
+  hit $100k").
+- They want to borrow real money (USD) using that bet as a guarantee (collateral).
+- THIS SIMULATOR calculates exactly how much USD is safe to give them based on 
+  the riskiness of that bet.
+
+--------------------------------------------------------------------------------
+2. CORE CONCEPTS
+--------------------------------------------------------------------------------
+
+A. WHAT IS A PREDICTION MARKET?
+A market where people trade outcomes of future events. If you think an event 
+will happen, you buy the "YES" token. If it happens, the token becomes worth 
+$1.00. If it doesn't, it becomes worth $0.00. The current market price (e.g., 
+$0.65) reflects the market's estimated probability (65%) of it happening.
+
+B. WHAT IS LTV (LOAN-TO-VALUE)?
+LTV is a percentage that tells you how much you can borrow against an asset.
+- If you have $100 worth of Gold and the LTV is 80%, you can borrow $80.
+- If the LTV is 50%, you can only borrow $50.
+Higher risk assets have LOWER LTVs to protect the lender from losing money if 
+the asset price crashes.
+
+--------------------------------------------------------------------------------
+3. THE REVALON "TWO-BUCKET" MODEL
+--------------------------------------------------------------------------------
+
+Not all bets are created equal. Revalon uses a "Two-Bucket" model to classify 
+risk.
+
+BUCKET A (Low Risk / High LTV):
+- These are "sure-ish things" that are ending soon.
+- Criteria: Price is > 0.65 AND there are fewer than 30 days left.
+- Logic: If a market is priced high and ending soon, it's less likely to 
+  suddenly swing to zero.
+
+BUCKET B (Standard Risk / Lower LTV):
+- Everything else. If it's a "coin flip" (price near 0.50) or if it's months 
+  away, it goes here.
+- Logic: More time means more things can go wrong.
+
+--------------------------------------------------------------------------------
+4. THE "MATH" BEHIND YOUR BORROW CAPACITY
+--------------------------------------------------------------------------------
+
+The simulator doesn't just look at the bucket. it applies three layers of 
+math to find the "Effective LTV":
+
+1. BASE LTV (The Starting Point)
+   - Bucket A gets 80% (default).
+   - Bucket B gets 70% (default).
+
+2. TIME DECAY (The "Ending Soon" Penalty)
+   As the resolution date gets very close, risk actually INCREASES because of 
+   potential technical issues or manual errors in how the market finishes.
+   - More than 30 days left: 100% of LTV.
+   - 8 to 30 days left: 85% of LTV.
+   - 4 to 7 days left: 65% of LTV.
+   - Less than 3 days: 40% of LTV (Severe haircut).
+
+3. CONFIDENCE MULTIPLIER (The "Conviction" Bonus)
+   If a market is priced at 0.50, nobody knows what will happen (Maximum 
+   Uncertainty). If it's at 0.90, the market is very confident. We reward 
+   confidence.
+   Formula: 0.5 + (|Price - 0.50| * 0.8)
+
+FINAL CALCULATION:
+Effective LTV = Base LTV × Time Decay × Confidence Multiplier
+
+Example:
+A $0.90 position in Bucket A with 5 days left:
+0.80 (Base) × 0.65 (Time Decay) × 0.82 (Confidence) = 42.6% LTV.
+You can borrow $42.60 for every $100 you have.
+
+--------------------------------------------------------------------------------
+5. HOW THE SYSTEM IS BUILT (THE "TECH STACK")
+--------------------------------------------------------------------------------
+
+The project is split into two halves:
+
+THE BACKEND (The Brain):
+- Built with Python (FastAPI).
+- It talks to Polymarket's APIs to get live data.
+- It runs all the LTV math explained above.
+- It "proxies" the data (acts as a middleman) so your browser doesn't get 
+  blocked by security rules.
+
+THE FRONTEND (The Dashboard):
+- Built with React and Tailwind CSS.
+- It takes the math from the backend and turns it into beautiful charts.
+- Uses "Recharts" for the heatmaps and distribution graphs.
+
+--------------------------------------------------------------------------------
+6. UNDERSTANDING THE DASHBOARD VIEWS
+--------------------------------------------------------------------------------
+
+VIEW 1: MARKET TABLE
+A searchable list. Look for "Flags":
+- LIQUIDATION RISK (Red): The price is extreme and the end is near. Very 
+  dangerous!
+- MISPRICED (Orange): Something doesn't look right (e.g., a Bucket A market 
+  with a Bucket B price).
+
+VIEW 2: RISK HEATMAP
+A scatter plot. 
+- The X-axis is the Price (0 to 1).
+- The Y-axis is Days (0 to 90).
+- Green dots = Safe (High LTV). Red dots = Risky (Low LTV).
+- This helps you see "Clusters" of risk at a glance.
+
+VIEW 3: DISTRIBUTION
+The "Stats" page. It tells you how many millions of dollars are in each bucket 
+and how healthy/risky the overall system is.
+
+VIEW 4: PARAMETER TUNER
+The "What-If" machine. You can slide the LTV numbers up or down to see how 
+it changes the risk for the whole market.
+
+--------------------------------------------------------------------------------
+7. WHY DID WE ADD "MOCK DATA"?
+--------------------------------------------------------------------------------
+
+Sometimes, your internet connection might block official crypto websites, or 
+Polymarket's servers might be slow. 
+To make sure this simulator ALWAYS works for a demo, I built in a "Mock Data" 
+system. If the real API can't be reached, the system automatically generates 
+50 realistic-looking markets so you can still play with the model and see 
+how it reacts.
+
+--------------------------------------------------------------------------------
+8. HOW TO RUN IT
+--------------------------------------------------------------------------------
+
+If you want to show this to someone else:
+1. Open a terminal for the BACKEND: 
+   - `cd backend && uvicorn main:app --port 8000`
+2. Open another terminal for the FRONTEND: 
+   - `cd frontend && npm run dev`
+3. Open your browser to: `http://localhost:5173`
+
+================================================================================
+END OF HANDBOOK
+================================================================================
