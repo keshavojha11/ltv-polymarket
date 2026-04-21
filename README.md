@@ -75,4 +75,4 @@ npm run dev
 The frontend proxies `/api/*` to `localhost:8000` automatically.
 
 ---
-Built by [keshavojha11](https://github.com/keshavojha11) as an internal demonstration for Revalon.
+Built by [keshavojha11](https://github.com/keshavojha11).
