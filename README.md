@@ -1,99 +1,78 @@
 # Polymarket LTV Risk Simulator
 
-A full-stack dashboard that simulates **Revalon's two-bucket LTV (Loan-to-Value) model** on real Polymarket prediction market positions. Built as an internal demo for Revalon's Q2 2026 launch.
+> **[Live Demo](https://ltv-polymarket.vercel.app)** · **[Backend API](https://ltv-polymarket-production.up.railway.app/health)**
 
-## Architecture
+A high-fidelity, full-stack dashboard designed to simulate **Revalon's two-bucket LTV (Loan-to-Value) model** on real-time Polymarket prediction market data. This tool allows risk managers to visualize and tune leverage parameters for prediction-market-backed loans.
+
+---
+
+## 🚀 Key Features
+
+- **Real-Time Data**: Proxies Polymarket Gamma & CLOB APIs for live market discovery and order book pricing.
+- **Dynamic Simulation**: Interactive parameter tuner (LTV buckets, liquidation thresholds) with debounced real-time updates.
+- **Risk Visualization**: High-fidelity scatter plot (Heatmap), bucket distribution analytics, and color-coded risk flags.
+- **Robust Engineering**: Async FastAPI backend with 60s cache TTL and automatic mock-data fallback for connectivity issues.
+
+## 🏗️ Architecture
 
 ```
 ┌─────────────┐     ┌──────────────────┐     ┌─────────────────────┐
 │   Frontend   │────▶│  FastAPI Backend  │────▶│  Polymarket APIs    │
 │  React/Vite  │◀────│   LTV Engine      │◀────│  Gamma + CLOB       │
-│  Tailwind    │     │   Cache (60s)     │     │  (no auth required) │
+│  Tailwind v4 │     │   Async Engine    │     │  (no auth required) │
 │  Recharts    │     └──────────────────┘     └─────────────────────┘
 └─────────────┘
 ```
 
-- **Backend**: Python FastAPI (async httpx, Pydantic models)
-- **Frontend**: React 18 + Tailwind CSS v4 + Recharts
-- **APIs**: Polymarket Gamma (market discovery) + CLOB (live pricing)
+## 🧠 The LTV Model
 
-## LTV Model
+The core logic implements a two-bucket model to differentiate between established, near-term markets and high-uncertainty positions.
 
-### Bucket Assignment
-- **Bucket A** (high-confidence): `price > 0.65 AND days_to_resolution < 30`
-- **Bucket B** (standard): everything else
+### 1. Bucket Assignment
+- **Bucket A** (High Confidence): `Price > 0.65` AND `Days to Resolution < 30`.
+- **Bucket B** (Standard): All other qualifying markets.
 
-### Effective LTV Calculation
-```
+### 2. Multiplier Logic
+```python
 effective_ltv = base_ltv × time_decay(days) × confidence_multiplier(price)
 ```
+- **Time Decay**: Step function reducing leverage as resolution nears (e.g., LTV drops to 40% when ≤ 3 days remain).
+- **Confidence Multiplier**: Rewards conviction (prices far from 0.50) using the formula: `0.5 + (|price - 0.50| * 0.8)`.
 
-- **Time Decay**: `>30d: 1.0 | >7d: 0.85 | >3d: 0.65 | ≤3d: 0.40`
-- **Confidence Multiplier**: `0.5 + (|price − 0.50| × 0.8)`
-- **Borrow Capacity**: `effective_ltv × $100`
+## 🧪 Technical Rigor
 
-### Risk Flags
-- **Liquidation Risk**: extreme price (>0.90 or <0.10) AND near expiry (<7 days)
-- **Mispriced**: bucket assignment anomaly
+Safety and accuracy are non-negotiable for a risk tool.
+- **Unit Testing**: Comprehensive test suite for the LTV engine covering edge cases in decay and multipliers. ([tests/test_ltv_engine.py](backend/tests/test_ltv_engine.py))
+- **Pydantic Validation**: Strict type-safety and validation for all API request/response models.
+- **Production Config**: Gunicorn with Uvicorn workers for the backend; Vercel SPA routing for the frontend.
 
-## Quick Start
+## 🛠️ Tech Stack
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
+- **Backend**: Python 3.9+, FastAPI, Httpx, Pandas, Pydantic, Gunicorn, Pytest.
+- **Frontend**: React 18, Vite 6, Tailwind CSS v4, Recharts, Lucide Icons.
+- **Deployment**: Railway (Backend), Vercel (Frontend).
 
-### Backend Setup
+---
+
+## ⚡ Quick Start (Local)
+
+### Backend
 ```bash
 cd backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload
 ```
 
-### Frontend Setup
+### Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-The frontend proxies `/api/*` requests to `http://localhost:8000` automatically.
+The frontend proxies `/api/*` to `localhost:8000` automatically.
 
-Open **http://localhost:5173** in your browser.
-
-## Dashboard Views
-
-1. **Market Table** — Sortable/filterable table with color-coded buckets and risk flags
-2. **Risk Heatmap** — Scatter plot (price × days) with LTV-colored dots and bucket boundaries
-3. **Bucket Distribution** — Summary stat cards, bucket bar chart, flag pie chart, LTV histogram
-4. **Parameter Tuner** — 5 interactive sliders with real-time simulation updates
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/markets` | Fetch top 50 markets with default LTV simulation |
-| `POST` | `/api/simulate` | Re-run LTV with custom parameters |
-| `POST` | `/api/refresh` | Force clear cache and re-fetch |
-| `GET` | `/health` | Health check |
-
-## Deployment
-
-### Backend (Railway/Render)
-```bash
-cd backend
-# Procfile: web: uvicorn main:app --host 0.0.0.0 --port $PORT
-```
-
-### Frontend (Vercel)
-```bash
-cd frontend
-# Set VITE_API_URL=https://your-backend.railway.app
-npm run build
-```
-
-## Tech Stack
-- FastAPI 0.115 · Uvicorn · httpx · Pydantic 2
-- React 18 · Vite 6 · Tailwind CSS v4 · Recharts
-- Polymarket Gamma API + CLOB API (no auth)
+---
+Built by [keshavojha11](https://github.com/keshavojha11) as an internal demonstration for Revalon.
