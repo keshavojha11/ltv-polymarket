@@ -1,4 +1,5 @@
 # Polymarket LTV Risk Simulator
+<!-- Deployment Status Verified -->
 
 > **[Live Demo](https://ltv-polymarket.vercel.app)** · **[Backend API](https://ltv-polymarket-production.up.railway.app/health)**
 

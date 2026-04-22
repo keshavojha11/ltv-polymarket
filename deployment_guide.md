@@ -30,8 +30,11 @@ Railway is ideal for the Python FastAPI backend.
     *   Select your repository.
     *   **CRITICAL**: Go to **Settings** -> **General** -> **Root Directory** and set it to `backend`. 
     *   *Without this, Railway will try to build the root folder and fail because it can't find your Python code.*
-    *   Railway will then detect the `requirements.txt` and `Procfile` inside the `backend` folder.
-4.  **Public URL**: Once deployed, go to the **Settings** tab and click **Generate Domain**.
+    *   Railway will then detect the `requirements.txt`, `Procfile`, and `railway.json` inside the `backend` folder.
+4.  **Ghost Service Cleanup**:
+    *   If Railway automatically created a service for your **root** directory (often named automatically like `affectionate-patience`), go to that service's **Settings** -> **Danger Zone** and click **Delete Service**.
+    *   You only need the service that has its **Root Directory** set to `backend`.
+5.  **Public URL**: Once deployed, go to the **Settings** tab and click **Generate Domain**.
     *   *Copy this URL (e.g., `https://polymarket-ltv-production.up.railway.app`). You will need it for the frontend.*
 
 ---
@@ -66,6 +69,7 @@ Once both are deployed:
 
 ## Troubleshooting
 
--   **Backend Failing**: Check Railway logs. Ensure the `Procfile` is in the `backend/` root.
+-   **Backend Failing**: Check Railway logs. Ensure the `Procfile` and `railway.json` are in the `backend/` root.
+-   **Multiple Checks on GitHub**: If you see a red "X" but your app is working, you likely have a redundant service linked to your repository root on Railway. Delete the service that isn't using the `backend/` root.
 -   **Frontend "Can't find data"**: Check if `VITE_API_URL` was set correctly. You can check the browser console to see if requests are hitting the wrong URL.
 -   **Mock Data**: If Railway cannot reach the Polymarket API due to server-side restrictions, the backend will automatically serve mock data so the dashboard still works.
