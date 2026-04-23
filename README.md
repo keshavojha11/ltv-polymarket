@@ -5,7 +5,7 @@
 
 A full-stack risk simulator for **prediction-market-backed lending** — an emerging DeFi primitive where traders borrow against live Polymarket positions. The core challenge: how do you set LTV for an asset that resolves to 0 or 1 at a hard deadline?
 
-This tool implements a **generalized two-bucket LTV model** for prediction-market collateral. It fetches live Polymarket data, computes effective LTV with time decay and confidence multipliers, and lets risk managers tune parameters in real time.
+This tool implements a **two-bucket LTV model** inspired by [Revalon](https://revalon.xyz) for prediction-market collateral. It fetches live Polymarket data, computes effective LTV with time decay and confidence multipliers, and lets risk managers tune parameters in real time.
 
 ---
 
