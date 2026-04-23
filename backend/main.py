@@ -50,7 +50,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Polymarket LTV Risk Simulator",
     description=(
-        "Simulates Revalon's two-bucket LTV model on live Polymarket positions. "
+        "Simulates a two-bucket LTV model for prediction-market-backed lending on live Polymarket positions. "
         "Fetches real-time market data, computes effective LTV, and flags risks."
     ),
     version="1.0.0",

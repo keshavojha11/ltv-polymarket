@@ -11,7 +11,7 @@ from models import SimulationConfig, MarketResult
 # ─── Component Tests ────────────────────────────────────────────────────────
 
 def test_time_decay():
-    """Verify time decay buckets match Revalon PRD."""
+    """Verify time decay buckets match the model spec."""
     assert time_decay(45) == 1.0    # > 30 days
     assert time_decay(15) == 0.85   # 8-30 days
     assert time_decay(5) == 0.65    # 4-7 days

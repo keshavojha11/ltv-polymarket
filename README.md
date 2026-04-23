@@ -3,7 +3,9 @@
 
 > **[Live Demo](https://ltv-polymarket.vercel.app)** · **[Backend API](https://ltv-polymarket-production.up.railway.app/health)**
 
-A high-fidelity, full-stack dashboard designed to simulate **Revalon's two-bucket LTV (Loan-to-Value) model** on real-time Polymarket prediction market data. This tool allows risk managers to visualize and tune leverage parameters for prediction-market-backed loans.
+A full-stack risk simulator for **prediction-market-backed lending** — an emerging DeFi primitive where traders borrow against live Polymarket positions. The core challenge: how do you set LTV for an asset that resolves to 0 or 1 at a hard deadline?
+
+This tool implements a **generalized two-bucket LTV model** for prediction-market collateral. It fetches live Polymarket data, computes effective LTV with time decay and confidence multipliers, and lets risk managers tune parameters in real time.
 
 ---
 
@@ -76,4 +78,4 @@ npm run dev
 The frontend proxies `/api/*` to `localhost:8000` automatically.
 
 ---
-Built by [keshavojha11](https://github.com/keshavojha11).
+Built by [keshavojha11](https://github.com/keshavojha11)

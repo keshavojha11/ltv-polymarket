@@ -174,7 +174,7 @@ export default function App() {
       {/* Footer */}
       <footer className="border-t border-border px-6 py-3 text-xs text-text-muted flex items-center justify-between bg-bg-secondary/50">
         <span>
-          Revalon LTV Risk Simulator · {summary?.total_markets || 0} markets loaded
+          Polymarket LTV Simulator · {summary?.total_markets || 0} markets loaded
         </span>
         <span className="font-mono">
           Auto-refresh: 60s · Cache TTL: 60s

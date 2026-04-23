@@ -17,7 +17,7 @@ class SimulationConfig(BaseModel):
     Tunable parameters for the LTV simulation.
     
     These map directly to the Parameter Tuner sliders on the frontend.
-    All values have sensible defaults matching Revalon's base model.
+    All values have sensible defaults matching the base two-bucket model.
     """
     ltv_bucket_a: float = Field(
         default=0.80,

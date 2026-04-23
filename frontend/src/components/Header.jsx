@@ -10,14 +10,14 @@ export default function Header({ lastFetched, loading, error, onRefresh }) {
       <div className="flex items-center gap-3">
         {/* Logo icon */}
         <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-accent/20">
-          R
+          P
         </div>
         <div>
           <h1 className="text-lg font-bold tracking-tight text-text-primary">
             LTV Risk Simulator
           </h1>
           <p className="text-xs text-text-muted">
-            Revalon · Polymarket Two-Bucket Model
+            Polymarket · Two-Bucket LTV Model
           </p>
         </div>
       </div>

@@ -2,7 +2,7 @@
 PREDICTION MARKET LTV RISK SIMULATOR: THE COMPLETE HANDBOOK
 ================================================================================
 
-Welcome to the internal guide for the Revalon LTV Risk Simulator. This document
+Welcome to the internal guide for the Polymarket LTV Risk Simulator. This document
 is designed as a "working textbook" to explain what this project is, why it 
 exists, and how the underlying logic works—even if you're new to finance or 
 coding.
@@ -11,7 +11,7 @@ coding.
 1. THE BIG PICTURE: WHAT IS THIS?
 --------------------------------------------------------------------------------
 
-This project is a web-based dashboard that helps Revalon (a lending protocol) 
+This project is a web-based dashboard for prediction-market-backed lending — it 
 decide how much money they can safely lend to someone who is using a 
 "Prediction Market" position as collateral.
 
@@ -40,10 +40,10 @@ Higher risk assets have LOWER LTVs to protect the lender from losing money if
 the asset price crashes.
 
 --------------------------------------------------------------------------------
-3. THE REVALON "TWO-BUCKET" MODEL
+3. THE TWO-BUCKET MODEL
 --------------------------------------------------------------------------------
 
-Not all bets are created equal. Revalon uses a "Two-Bucket" model to classify 
+Not all bets are created equal. The model uses a "Two-Bucket" system to classify 
 risk.
 
 BUCKET A (Low Risk / High LTV):

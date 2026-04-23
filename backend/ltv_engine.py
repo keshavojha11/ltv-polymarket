@@ -1,5 +1,5 @@
 """
-LTV Simulation Engine — Revalon's Two-Bucket Model
+LTV Simulation Engine — Two-Bucket Model for Prediction Market Collateral
 
 This module implements the core LTV (Loan-to-Value) calculations for
 prediction market positions. The model assigns each market to one of
@@ -48,7 +48,7 @@ def time_decay(days: int) -> float:
     Step-function time decay multiplier.
     
     As resolution approaches, settlement/manipulation risk increases.
-    The decay schedule reflects Revalon's risk appetite:
+    The decay schedule reflects a conservative risk appetite:
     
     >30 days: 1.00 (full LTV — far from resolution, low settlement risk)
      8-30 days: 0.85 (mild haircut — resolution approaching)
